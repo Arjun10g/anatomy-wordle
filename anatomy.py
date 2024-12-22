@@ -223,10 +223,25 @@ muscles = [
 background_url = "https://img.pikbest.com/backgrounds/20191127/skeleton-hand-seamless-pattern-on-black-background--halloween-bones-pattern-background--v_1605390jpg!bw700"
 custom_css = f"""
 <style>
-    body {{
+    #root > div:nth-child(1) > div.withScreencast > div > div > div > section {{
         background-image: url("{background_url}");
         background-size: cover;
         background-attachment: fixed;
+    }}
+    .e1f1d6gn2 {{
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 50px;
+        border-radius: 10px;
+        }}
+    #bone-and-muscle-wordle{{
+        background-image: linear-gradient(45deg, #ff5722, #ff9800);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 3px;
+        word-spacing: 7px;
+        font-size: 30px;
+        text-align: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }}
     .main-container {{
         background-color: rgba(0, 0, 0, 0.7);
@@ -303,11 +318,172 @@ st.title("Bone and Muscle Wordle")
 st.write(f"Guess the entity: {masked_word} ({len(hidden_word)} letters)")
 
 # Define all hints
+# Define all hints
 all_hints = [
     f"Category: {st.session_state['entity']['category']}",
     f"Region: {st.session_state['entity']['region']}",
     f"Type: {st.session_state['entity']['type']}",
 ]
+
+# Add a 4th hint
+if st.session_state['entity']['category'] == "Bone":
+    all_hints.append(f"First Letter: {st.session_state['entity']['name'][0]}")
+elif st.session_state['entity']['category'] == "Muscle":
+    # Replace with a more detailed dataset if available
+    muscle_bone_attachment = {
+        # Chest (Pectoral Region)
+        "Pectoralis Major": "Humerus",
+        "Pectoralis Minor": "Coracoid Process",
+        "Serratus Anterior": "Scapula",
+        "Subclavius": "Clavicle",
+
+        # Back (Superficial)
+        "Trapezius": "Clavicle, Scapula",
+        "Latissimus Dorsi": "Humerus",
+        "Levator Scapulae": "Scapula",
+        "Rhomboid Major": "Scapula",
+        "Rhomboid Minor": "Scapula",
+
+        # Back (Deep)
+        "Iliocostalis": "Ribs, Vertebrae",
+        "Longissimus": "Ribs, Vertebrae",
+        "Spinalis": "Vertebrae",
+        "Semispinalis": "Occipital Bone, Vertebrae",
+        "Multifidus": "Vertebrae",
+        "Rotatores": "Vertebrae",
+        "Splenius Capitis": "Occipital Bone, Temporal Bone",
+        "Splenius Cervicis": "Cervical Vertebrae",
+        "Interspinales": "Vertebrae",
+        "Intertransversarii": "Vertebrae",
+
+        # Neck (Superficial)
+        "Platysma": "Mandible",
+        "Sternocleidomastoid": "Sternum, Clavicle",
+
+        # Neck (Suprahyoid)
+        "Digastric": "Mandible, Hyoid Bone",
+        "Stylohyoid": "Hyoid Bone",
+        "Mylohyoid": "Mandible, Hyoid Bone",
+        "Geniohyoid": "Mandible, Hyoid Bone",
+
+        # Neck (Infrahyoid)
+        "Sternohyoid": "Sternum, Hyoid Bone",
+        "Omohyoid": "Scapula, Hyoid Bone",
+        "Thyrohyoid": "Thyroid Cartilage, Hyoid Bone",
+        "Sternothyroid": "Sternum, Thyroid Cartilage",
+
+        # Neck (Deep)
+        "Longus Capitis": "Occipital Bone, Vertebrae",
+        "Longus Colli": "Cervical Vertebrae",
+        "Scalenes": "Ribs, Cervical Vertebrae",
+
+        # Shoulder
+        "Deltoid": "Humerus, Clavicle, Scapula",
+        "Supraspinatus": "Humerus, Scapula",
+        "Infraspinatus": "Humerus, Scapula",
+        "Teres Minor": "Humerus, Scapula",
+        "Teres Major": "Humerus, Scapula",
+        "Subscapularis": "Humerus, Scapula",
+
+        # Arm
+        "Biceps Brachii": "Radius, Scapula",
+        "Brachialis": "Ulna, Humerus",
+        "Coracobrachialis": "Humerus, Scapula",
+        "Triceps Brachii": "Ulna, Scapula, Humerus",
+        "Anconeus": "Ulna, Humerus",
+
+        # Forearm (Anterior Compartment)
+        "Pronator Teres": "Radius, Humerus",
+        "Flexor Carpi Radialis": "Metacarpals, Humerus",
+        "Palmaris Longus": "Flexor Retinaculum, Humerus",
+        "Flexor Carpi Ulnaris": "Carpals, Humerus, Ulna",
+        "Flexor Digitorum Superficialis": "Middle Phalanges, Humerus, Radius",
+        "Flexor Digitorum Profundus": "Distal Phalanges, Ulna",
+        "Flexor Pollicis Longus": "Distal Phalanx of Thumb, Radius",
+        "Pronator Quadratus": "Radius, Ulna",
+
+        # Forearm (Posterior Compartment)
+        "Brachioradialis": "Radius, Humerus",
+        "Extensor Carpi Radialis Longus": "Metacarpals, Humerus",
+        "Extensor Carpi Radialis Brevis": "Metacarpals, Humerus",
+        "Extensor Digitorum": "Phalanges, Humerus",
+        "Extensor Digiti Minimi": "Phalanges, Humerus",
+        "Extensor Carpi Ulnaris": "Metacarpals, Humerus, Ulna",
+        "Supinator": "Radius, Humerus, Ulna",
+        "Abductor Pollicis Longus": "Metacarpal of Thumb, Radius, Ulna",
+        "Extensor Pollicis Brevis": "Proximal Phalanx of Thumb, Radius",
+        "Extensor Pollicis Longus": "Distal Phalanx of Thumb, Ulna",
+        "Extensor Indicis": "Phalanges, Ulna",
+
+        # Hand
+        "Abductor Pollicis Brevis": "Thumb Phalanx, Carpal Bones",
+        "Flexor Pollicis Brevis": "Thumb Phalanx, Carpal Bones",
+        "Opponens Pollicis": "Metacarpal of Thumb, Carpal Bones",
+        "Adductor Pollicis": "Thumb Phalanx, Carpal Bones",
+        "Abductor Digiti Minimi": "Phalanx of Little Finger, Carpal Bones",
+        "Flexor Digiti Minimi Brevis": "Phalanx of Little Finger, Carpal Bones",
+        "Opponens Digiti Minimi": "Metacarpal of Little Finger, Carpal Bones",
+        "Lumbricals": "Phalanges, Metacarpals",
+        "Palmar Interossei": "Phalanges, Metacarpals",
+        "Dorsal Interossei": "Phalanges, Metacarpals",
+
+        # Abdomen
+        "Rectus Abdominis": "Sternum, Pubis",
+        "External Oblique": "Ribs, Iliac Crest",
+        "Internal Oblique": "Ribs, Iliac Crest",
+        "Transversus Abdominis": "Ribs, Iliac Crest",
+
+        # Hip Muscles
+        "Gluteus Maximus": "Femur, Ilium, Sacrum",
+        "Gluteus Medius": "Femur, Ilium",
+        "Gluteus Minimus": "Femur, Ilium",
+        "Iliacus": "Femur, Ilium",
+        "Psoas Major": "Femur, Vertebrae",
+        "Piriformis": "Femur, Sacrum",
+
+        # Thigh (Quadriceps)
+        "Rectus Femoris": "Patella, Femur",
+        "Vastus Lateralis": "Patella, Femur",
+        "Vastus Medialis": "Patella, Femur",
+        "Vastus Intermedius": "Patella, Femur",
+
+        # Thigh (Hamstrings)
+        "Biceps Femoris": "Tibia, Femur",
+        "Semitendinosus": "Tibia, Ischium",
+        "Semimembranosus": "Tibia, Ischium",
+
+        # Inner Thigh (Adductors)
+        "Adductor Longus": "Femur, Pubis",
+        "Adductor Brevis": "Femur, Pubis",
+        "Adductor Magnus": "Femur, Ischium",
+        "Gracilis": "Tibia, Pubis",
+        "Pectineus": "Femur, Pubis",
+
+        # Lower Leg (Calf Muscles)
+        "Gastrocnemius": "Calcaneus, Femur",
+        "Soleus": "Calcaneus, Tibia",
+        "Plantaris": "Calcaneus, Femur",
+
+        # Lower Leg (Anterior Muscles)
+        "Tibialis Anterior": "Metatarsals, Tibia",
+        "Extensor Digitorum Longus": "Phalanges, Tibia, Fibula",
+        "Extensor Hallucis Longus": "Phalanx of Big Toe, Fibula",
+
+        # Lower Leg (Lateral Muscles)
+        "Fibularis Longus (Peroneus Longus)": "Metatarsals, Fibula",
+        "Fibularis Brevis (Peroneus Brevis)": "Metatarsals, Fibula",
+    }
+
+    attached_bone = muscle_bone_attachment.get(st.session_state['entity']['name'], "Unknown")
+    all_hints.append(f"Attaches to: {attached_bone}")
+
+# Provide the next hint when the button is clicked
+if st.session_state["hints"] < len(all_hints):
+    if st.button(f"Reveal Hint {st.session_state['hints'] + 1}"):
+        next_hint = all_hints[st.session_state["hints"]]
+        st.session_state["revealed_hints"].append(next_hint)
+        st.session_state["hints"] += 1
+        st.session_state["lives"] -= 1
 
 # Show revealed hints so far
 if st.session_state["revealed_hints"]:
@@ -315,14 +491,6 @@ if st.session_state["revealed_hints"]:
     for hint in st.session_state["revealed_hints"]:
         st.write(f"- {hint}")
 
-# Provide the next hint when the button is clicked
-if st.session_state["hints"] < len(all_hints):
-    if st.button(f"Reveal Hint {st.session_state['hints'] + 1}"):
-        next_hint = all_hints[st.session_state["hints"]]
-        st.session_state["revealed_hints"].append(next_hint)
-        st.write(f"Hint: {next_hint}")
-        st.session_state["hints"] += 1
-        st.session_state["lives"] -= 1
 
 # Input for guesses
 guess = st.text_input("Your guess:").strip()
